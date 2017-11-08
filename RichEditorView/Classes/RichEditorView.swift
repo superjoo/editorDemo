@@ -139,20 +139,22 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
     }
     
     private func setup() {
-        backgroundColor = .red
+        backgroundColor = .white
         
         webView.frame = bounds
         webView.delegate = self
         webView.keyboardDisplayRequiresUserAction = false
         webView.scalesPageToFit = false
+        webView.isOpaque = false
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.dataDetectorTypes = UIDataDetectorTypes()
-        webView.backgroundColor = .white
+        webView.backgroundColor = .clear
         
         webView.scrollView.isScrollEnabled = isScrollEnabled
         webView.scrollView.bounces = false
         webView.scrollView.delegate = self
         webView.scrollView.clipsToBounds = false
+        webView.clipsToBounds = false
         
         webView.cjw_inputAccessoryView = nil
         
@@ -427,6 +429,11 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
         return true
     }
 
+    public func webViewDidFinishLoad(_ webView: UIWebView) {
+        after(0.5) {
+            self.focus()
+        }
+    }
 
     // MARK: UIGestureRecognizerDelegate
 
@@ -543,6 +550,13 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
                     item.tintColor = barButtonItemSelectedDefaultColor
                 }
             }
+        }
+    }
+    
+    func after(_ time:Float,block:@escaping () -> Void) {
+        let dtime = DispatchTime.now() + Double(Int64(Double(time) * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: dtime) { () -> Void in
+            block()
         }
     }
 }

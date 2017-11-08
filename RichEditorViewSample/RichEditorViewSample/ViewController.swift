@@ -13,6 +13,8 @@ import TZImagePickerController
 class ViewController: UIViewController {
     
     fileprivate var selectedPhotoArray = NSMutableArray()
+    
+    fileprivate let webViewInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
 
     @IBOutlet var editorView: RichEditorView!
 
@@ -27,7 +29,8 @@ class ViewController: UIViewController {
         
         editorView.delegate = self
         editorView.inputAccessoryView = toolbar
-
+        editorView.webView.scrollView.contentInset = webViewInset
+        
         toolbar.delegate = self
         toolbar.editor = editorView
         editorView.placeholder = "说点什么吧..."
@@ -35,7 +38,7 @@ class ViewController: UIViewController {
         let btn = UIBarButtonItem(title: "内容", style: .plain, target: self, action: #selector(showHTML))
         self.navigationItem.rightBarButtonItem = btn
     }
-
+    
     func showHTML() {
         print("😝😝\(editorView.html)")
     }
@@ -189,7 +192,7 @@ extension ViewController {
             UIView.animate(withDuration: duration.doubleValue, delay: 0, options: .curveEaseInOut, animations: {
                 self.editorView.frame.size.height = self.view.frame.size.height - keyboardHeight - sizeOfToolbar - 25
                 self.editorView.webView.frame.size.height = self.editorView.frame.size.height
-                self.editorView.webView.scrollView.contentInset = .zero
+                self.editorView.webView.scrollView.contentInset = self.webViewInset
                 self.editorView.webView.scrollView.scrollIndicatorInsets = .zero
                 self.editorView.runCustomJS(js: "RE.contentHeight=\(self.editorView.frame.size.height)")
             }, completion: nil)
@@ -197,7 +200,7 @@ extension ViewController {
             UIView.animate(withDuration: duration.doubleValue, delay: 0, options: .curveEaseInOut, animations: {
                 self.toolbar.frame.origin.y = self.view.frame.size.height + keyboardHeight
                 self.editorView.frame.size.height = self.view.frame.size.height
-                self.editorView.webView.scrollView.contentInset = .zero
+                self.editorView.webView.scrollView.contentInset = self.webViewInset
                 self.editorView.webView.scrollView.scrollIndicatorInsets = .zero
                 self.editorView.runCustomJS(js: "RE.contentHeight=\(self.editorView.frame.size.height)")
             }, completion: nil)

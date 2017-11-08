@@ -38,6 +38,8 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>允许jzb使用相机吗？</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>允许使用相机吗？</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
