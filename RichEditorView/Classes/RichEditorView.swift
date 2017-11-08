@@ -183,7 +183,6 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
             contentHTML = newValue
             if isEditorLoaded {
                 runJS("RE.setHtml('\(newValue.escaped)');")
-                updateHeight()
             }
         }
     }
@@ -466,46 +465,6 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
         let string = runJS("RE.getRelativeCaretYPosition();")
         return Int(string) ?? 0
     }
-
-    private func updateHeight() {
-        let heightString = runJS("document.getElementById('editor').clientHeight;")
-        let height = Int(heightString) ?? 0
-        if editorHeight != height {
-            editorHeight = height
-        }
-    }
-
-    /// Scrolls the editor to a position where the caret is visible.
-    /// Called repeatedly to make sure the caret is always visible when inputting text.
-    /// Works only if the `lineHeight` of the editor is available.
-    private func scrollCaretToVisible() {
-        let scrollView = self.webView.scrollView
-        
-        let contentHeight = clientHeight > 0 ? CGFloat(clientHeight) : scrollView.frame.height
-        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: contentHeight)
-        
-        // XXX: Maybe find a better way to get the cursor height
-        let lineHeight = CGFloat(self.lineHeight)
-        let cursorHeight = lineHeight - 4
-        let visiblePosition = CGFloat(relativeCaretYPosition)
-        var offset: CGPoint?
-
-        if visiblePosition + cursorHeight > scrollView.bounds.size.height {
-            // Visible caret position goes further than our bounds
-            offset = CGPoint(x: 0, y: (visiblePosition + lineHeight) - scrollView.bounds.height + scrollView.contentOffset.y)
-
-        } else if visiblePosition < 0 {
-            // Visible caret position is above what is currently visible
-            var amount = scrollView.contentOffset.y + visiblePosition
-            amount = amount < 0 ? 0 : amount
-            offset = CGPoint(x: scrollView.contentOffset.x, y: amount)
-
-        }
-
-        if let offset = offset {
-            scrollView.setContentOffset(offset, animated: true)
-        }
-    }
     
     /// Called when actions are received from JavaScript
     /// - parameter method: String with the name of the method and optional parameters that were passed in
@@ -520,16 +479,12 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
                 lineHeight = innerLineHeight
                 delegate?.richEditorDidLoad?(self)
             }
-            updateHeight()
         }
         else if method.hasPrefix("input") {
-            scrollCaretToVisible()
             let content = runJS("RE.getHtml()")
             contentHTML = content
-            updateHeight()
         }
         else if method.hasPrefix("updateHeight") {
-            updateHeight()
         }
         else if method.hasPrefix("focus") {
             delegate?.richEditorTookFocus?(self)

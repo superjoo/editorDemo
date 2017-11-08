@@ -27,6 +27,8 @@ body {
     font-family: 'HelveticaNeue';
     color:#666666;
     font-size: 14pt;
+    padding:0px 0px 0px 10px;
+    margin:0px;
 }
 
 h3, p {

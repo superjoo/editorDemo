@@ -32,7 +32,7 @@ RE.editor = document.getElementById('editor');
 document.addEventListener("selectionchange", function(e) {
                           RE.backuprange();
                           RE.replaceDIVNode();
-//                          RE.calculateEditorHeightWithCaretPosition();
+                          RE.calculateEditorHeightWithCaretPosition();
                           RE.enableEditingItems(e);
                           });
 

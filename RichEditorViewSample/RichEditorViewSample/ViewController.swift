@@ -187,7 +187,7 @@ extension ViewController {
         let keyboardHeight = keyboardEnd?.cgRectValue.size.height ?? 0
         if aNotification.name == NSNotification.Name.UIKeyboardWillShow {
             UIView.animate(withDuration: duration.doubleValue, delay: 0, options: .curveEaseInOut, animations: {
-                self.editorView.frame.size.height = self.view.frame.size.height - keyboardHeight - sizeOfToolbar
+                self.editorView.frame.size.height = self.view.frame.size.height - keyboardHeight - sizeOfToolbar - 25
                 self.editorView.webView.frame.size.height = self.editorView.frame.size.height
                 self.editorView.webView.scrollView.contentInset = .zero
                 self.editorView.webView.scrollView.scrollIndicatorInsets = .zero
