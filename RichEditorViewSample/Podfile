@@ -1,0 +1,6 @@
+use_frameworks!
+
+target 'RichEditorViewSample' do
+    pod "RichEditorView", :path => "../"
+    pod 'TZImagePickerController', '~> 1.7.9'
+end
