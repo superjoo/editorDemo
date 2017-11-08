@@ -343,7 +343,7 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
             UIAlertView(title: "网址必须以http开头", message: nil, delegate: nil, cancelButtonTitle: "确定").show()
         } else {
             runJS("RE.prepareInsert();")
-            runJS("RE.insertLink('\(href.escaped)', '\(title.escaped)');")
+            runJS("RE.updateLink('\(href.escaped)', '\(title.escaped)');")
         }
         self.selectedHref = nil
         self.selectedLinkTitle = nil
