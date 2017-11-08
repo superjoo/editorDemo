@@ -38,6 +38,7 @@ h3, p {
 img{
     max-width:100%;
     height:auto;
+/*    opacity:0.7*/
 }
 
 #editor {

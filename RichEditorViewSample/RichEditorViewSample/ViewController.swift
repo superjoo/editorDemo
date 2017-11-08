@@ -145,6 +145,7 @@ extension ViewController: RichEditorToolbarDelegate {
 }
 
 extension ViewController {
+    
     func getRandomFileName() -> String {
         let fileName = "\(UUID().uuidString).jpg"
         let documentPath = NSHomeDirectory() + "/Documents"
@@ -158,10 +159,11 @@ extension ViewController {
             let data = UIImagePNGRepresentation(image)
             if data != nil {
                 let filePath = getRandomFileName()
+                let imgId = (filePath as NSString).lastPathComponent.replacingOccurrences(of: ".jpg", with: "")
                 do {
                     try data?.write(to: URL(fileURLWithPath: filePath))
                     self.selectedPhotoArray.add(filePath)
-                    toolbar.editor?.insertImage(filePath, alt: "")
+                    toolbar.editor?.insertImage(filePath, alt: "", imageId: imgId)
                 } catch {}
             }
         }

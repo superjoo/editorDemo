@@ -294,13 +294,27 @@ RE.setLineHeight = function(height) {
     RE.editor.style.lineHeight = height;
 };
 
-RE.insertImage = function(url, alt) {
+RE.insertImage = function(url, alt,id) {
+    
+    var span = document.createElement("span");
+    span.id = id;
+    
+    var progress = document.createElement("progress");
+    progress.id = id + "_progress";
+    progress.value = 40;
+    
     var img = document.createElement('img');
     img.setAttribute("src", url);
     img.setAttribute("alt", alt);
+    img.id = id + "_img"
     img.onload = RE.updateHeight;
     
-    RE.insertHTML(img.outerHTML);
+    span.appendChild(progress);
+    span.appendChild(img);
+    
+    RE.insertHTML(span.outerHTML);
+    
+//    RE.insertHTML(img.outerHTML);
     RE.callback("input");
 };
 
