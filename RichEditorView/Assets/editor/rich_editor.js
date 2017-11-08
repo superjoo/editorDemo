@@ -721,3 +721,7 @@ RE.removeEditorState = function(type) {
         }
     }
 }
+
+RE.displayTitle = function(display) {
+    
+}

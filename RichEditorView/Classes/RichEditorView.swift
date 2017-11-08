@@ -53,6 +53,9 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
 
     /// The internal UIWebView that is used to display the text.
     open private(set) var webView: UIWebView
+    
+    // display title,default is false
+    open var displayTitle = false
 
     /// Whether or not scroll is enabled on the view.
     open var isScrollEnabled: Bool = true {
@@ -359,7 +362,20 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
     }
     
     public func titleDisplay() {
-        
+        self.displayTitle = !self.displayTitle
+        if let toolBar = self.inputAccessoryView as? RichEditorToolbar,(toolBar.items?.count ?? 0) > 0 {
+            for item in toolBar.items! {
+                let itemLabel = (item as? RichBarButtonItem)?.label ?? ""
+                if itemLabel == "title" {
+                    if self.displayTitle {
+                        item.tintColor = barButtonItemSelectedDefaultColor
+                    } else {
+                        item.tintColor = barButtonItemDefaultColor
+                    }
+                }
+            }
+        }
+        runJS("RE.displayTitle(\(self.displayTitle))")
     }
 
     /// Runs some JavaScript on the UIWebView and returns the result
@@ -548,6 +564,13 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
                     item.tintColor = barButtonItemDefaultColor
                 } else {
                     item.tintColor = barButtonItemSelectedDefaultColor
+                }
+                if itemLabel == "title" {
+                    if self.displayTitle {
+                        item.tintColor = barButtonItemSelectedDefaultColor
+                    } else {
+                        item.tintColor = barButtonItemDefaultColor
+                    }
                 }
             }
         }
