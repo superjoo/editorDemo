@@ -32,8 +32,7 @@ RE.editor = document.getElementById('editor');
 document.addEventListener("selectionchange", function(e) {
                           RE.backuprange();
                           RE.replaceDIVNode();
-                          RE.calculateEditorHeightWithCaretPosition();
-                          RE.setScrollPosition();
+//                          RE.calculateEditorHeightWithCaretPosition();
                           RE.enableEditingItems(e);
                           });
 
@@ -41,7 +40,6 @@ RE.editor.addEventListener("touchend", function(e) {
                             RE.enableEditingItems(e);
                      });
 RE.editor.addEventListener("touchmove", function(e) {
-                           RE.setScrollPosition();
                            RE.enableEditingItems(e);
                        });
 
@@ -685,11 +683,6 @@ RE.getCaretYPosition = function() {
     var topPosition = span.offsetTop;
     span.parentNode.removeChild(span);
     return topPosition;
-}
-
-RE.setScrollPosition = function() {
-    var position = window.pageYOffset;
-    window.location = 'scroll://'+position;
 }
 
 RE.removeEditorState = function(type) {
