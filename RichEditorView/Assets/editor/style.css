@@ -27,7 +27,7 @@ body {
     font-family: 'HelveticaNeue';
     color:#666666;
     font-size: 14pt;
-    padding:0px 0px 0px 10px;
+    padding:0px 10px 0px 10px;
     margin:0px;
 }
 
@@ -49,8 +49,12 @@ img{
     overflow: auto;
 }
 
-#editor:focus {
+#editor:focus, #title:focus {
     outline: 0px solid transparent;
+}
+
+.placeholder {
+    position: relative;
 }
 
 .placeholder[placeholder]:after {
@@ -74,3 +78,60 @@ blockquote{
     border-left: 6px solid rgb(180,180,180);
 }
 
+span.img_container {
+    top:10px;
+    margin:15px 0px 15px 0px;
+    position: relative;
+    display: inline-block;
+    -webkit-user-select: none;
+}
+
+span.img_container.failed {
+    overflow: hidden;
+}
+
+progress.wp_media_indicator {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    -webkit-user-select: none;
+    appearance: none;
+    position: absolute;
+    top:-2pt; height:2pt;
+    left:0px; width:100%;
+}
+
+progress.wp_media_indicator::-webkit-progress-bar {
+    background-color: rgba(232,240,247,1.0);
+}
+
+progress.wp_media_indicator::-webkit-progress-value {
+    background-color:rgba(0,135,190,1.0);
+}
+
+progress.wp_media_indicator.failed::-webkit-progress-bar {
+    background-color: rgba(232,232,232,1.0);
+}
+
+progress.wp_media_indicator.failed::-webkit-progress-value {
+    background-color:rgba(135,135,135,1.0);
+}
+
+#separatorDiv {
+    margin-right: 10px;
+}
+
+#editor:focus, #title:focus {
+    outline: 0px solid transparent;
+}
+
+#title {
+    min-height: 32px;
+    -webkit-user-select: auto !important;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+#title p {
+    padding: 0;
+    margin: 0;
+    min-height: 32px;
+    line-height: 32px;
+}

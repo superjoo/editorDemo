@@ -388,7 +388,18 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
         return string
     }
 
-
+    public func updateImageProgress(imageId:String,progress:Double) {
+        runJS("RE.updateImageProgress('\(progress)', '\(imageId)');")
+    }
+    
+    public func imageUploadSuccess(imageId:String) {
+        runJS("RE.imageUploadSuccess('\(imageId)');")
+    }
+    
+    public func imageUploadFail(imageId:String) {
+        
+    }
+    
     // MARK: - Delegate Methods
 
 
@@ -560,10 +571,13 @@ open class RichEditorView: UIView, UIScrollViewDelegate, UIWebViewDelegate, UIGe
         if let toolBar = self.inputAccessoryView as? RichEditorToolbar,(toolBar.items?.count ?? 0) > 0 {
             for item in toolBar.items! {
                 let itemLabel = (item as? RichBarButtonItem)?.label ?? ""
-                if !itemsModified.contains(itemLabel) {
+                if !itemsModified.contains(itemLabel){
                     item.tintColor = barButtonItemDefaultColor
                 } else {
                     item.tintColor = barButtonItemSelectedDefaultColor
+                }
+                if itemLabel == "image" {
+                    item.tintColor = barButtonItemDefaultColor
                 }
                 if itemLabel == "title" {
                     if self.displayTitle {

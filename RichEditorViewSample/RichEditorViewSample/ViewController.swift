@@ -13,6 +13,7 @@ import TZImagePickerController
 class ViewController: UIViewController {
     
     fileprivate var selectedPhotoArray = NSMutableArray()
+    fileprivate var uploadedPhotoArray = NSMutableDictionary()
     
     fileprivate let webViewInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
 
@@ -82,6 +83,9 @@ extension ViewController: RichEditorToolbarDelegate {
         imageVC?.sortAscendingByModificationDate = false 
         imageVC?.didFinishPickingPhotosHandle = {[weak self] (photos ,assets ,isSelectOriginalPhoto) in
             self?.insertImages(imgArr: photos, toolBar: toolbar)
+        }
+        imageVC?.imagePickerControllerDidCancelHandle = {[weak self] in
+            self?.editorView.focus()
         }
         self.present(imageVC!, animated: true, completion: nil)
     }
@@ -164,11 +168,29 @@ extension ViewController {
                     try data?.write(to: URL(fileURLWithPath: filePath))
                     self.selectedPhotoArray.add(filePath)
                     toolbar.editor?.insertImage(filePath, alt: "", imageId: imgId)
+                    self.uploadImage(filePath: filePath, imageId: imgId)
                 } catch {}
             }
         }
     }
     
+    func uploadImage(filePath:String,imageId:String) {
+        var progress:Double = 0
+        if #available(iOS 10.0, *) {
+            let timer = Timer(timeInterval: 0.1, repeats: true, block: { (timer) in
+                progress += 0.01
+                print(progress)
+                if progress >= 1 {
+                    self.editorView.imageUploadSuccess(imageId: imageId)
+                    timer.invalidate()
+                } else {
+                    self.editorView.updateImageProgress(imageId: imageId, progress: progress)
+                }
+            })
+            RunLoop.current.add(timer, forMode: .defaultRunLoopMode)
+            timer.fire()
+        }
+    }
 }
 
 extension ViewController {
@@ -199,13 +221,13 @@ extension ViewController {
                 self.editorView.runCustomJS(js: "RE.contentHeight=\(self.editorView.frame.size.height)")
             }, completion: nil)
         } else if aNotification.name == NSNotification.Name.UIKeyboardWillHide {
-            UIView.animate(withDuration: duration.doubleValue, delay: 0, options: .curveEaseInOut, animations: {
+//            UIView.animate(withDuration: duration.doubleValue, delay: 0, options: .curveEaseInOut, animations: {
                 self.toolbar.frame.origin.y = self.view.frame.size.height + keyboardHeight
                 self.editorView.frame.size.height = self.view.frame.size.height
                 self.editorView.webView.scrollView.contentInset = self.webViewInset
                 self.editorView.webView.scrollView.scrollIndicatorInsets = .zero
                 self.editorView.runCustomJS(js: "RE.contentHeight=\(self.editorView.frame.size.height)")
-            }, completion: nil)
+//            }, completion: nil)
         }
     }
 }

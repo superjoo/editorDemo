@@ -341,33 +341,33 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor whiteColor];
-        AVCaptureDeviceInput *captureInput = [AVCaptureDeviceInput deviceInputWithDevice:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] error:nil];
-        AVCaptureVideoDataOutput *captureOutput = [[AVCaptureVideoDataOutput alloc]init];
-        captureOutput.alwaysDiscardsLateVideoFrames = YES;
-        //captureOutput.minFrameDuration = CMTimeMake(1, 10);
-        
-        dispatch_queue_t queue;
-        queue = dispatch_queue_create("cameraQueue", NULL);
-        [captureOutput setSampleBufferDelegate:self queue:queue];
-        NSString* key = (NSString*)kCVPixelBufferPixelFormatTypeKey;
-        NSNumber* value = [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA];
-        NSDictionary* videoSettings = [NSDictionary dictionaryWithObject:value forKey:key];
-        [captureOutput setVideoSettings:videoSettings];
-        _captureSession = [[AVCaptureSession alloc] init];
-        [_captureSession addInput:captureInput];
-        [_captureSession addOutput:captureOutput];
-        [_captureSession startRunning];
-        
-        //实时显示摄像头内容
-        _captureLayer = [AVCaptureVideoPreviewLayer layerWithSession: _captureSession];
-        _captureLayer.frame = self.bounds;
-        _captureLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-        [self.layer addSublayer: _captureLayer];
-        
-        //显示输出图片
-        _outputImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_captureLayer.frame)+10, CGRectGetWidth(_captureLayer.frame), CGRectGetHeight(_captureLayer.frame))];
-        [self addSubview:_outputImageView];
+//        self.backgroundColor = [UIColor whiteColor];
+//        AVCaptureDeviceInput *captureInput = [AVCaptureDeviceInput deviceInputWithDevice:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] error:nil];
+//        AVCaptureVideoDataOutput *captureOutput = [[AVCaptureVideoDataOutput alloc]init];
+//        captureOutput.alwaysDiscardsLateVideoFrames = YES;
+//        //captureOutput.minFrameDuration = CMTimeMake(1, 10);
+//        
+//        dispatch_queue_t queue;
+//        queue = dispatch_queue_create("cameraQueue", NULL);
+//        [captureOutput setSampleBufferDelegate:self queue:queue];
+//        NSString* key = (NSString*)kCVPixelBufferPixelFormatTypeKey;
+//        NSNumber* value = [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA];
+//        NSDictionary* videoSettings = [NSDictionary dictionaryWithObject:value forKey:key];
+//        [captureOutput setVideoSettings:videoSettings];
+//        _captureSession = [[AVCaptureSession alloc] init];
+//        [_captureSession addInput:captureInput];
+//        [_captureSession addOutput:captureOutput];
+//        [_captureSession startRunning];
+//        
+//        //实时显示摄像头内容
+//        _captureLayer = [AVCaptureVideoPreviewLayer layerWithSession: _captureSession];
+//        _captureLayer.frame = self.bounds;
+//        _captureLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+//        [self.layer addSublayer: _captureLayer];
+//        
+//        //显示输出图片
+//        _outputImageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(_captureLayer.frame)+10, CGRectGetWidth(_captureLayer.frame), CGRectGetHeight(_captureLayer.frame))];
+//        [self addSubview:_outputImageView];
     }
     return self;
 }

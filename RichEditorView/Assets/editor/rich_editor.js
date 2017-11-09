@@ -22,6 +22,9 @@ RE.currentFmtCount;
 
 RE.contentHeight = 244;
 
+RE.titleEditor = document.getElementById('title');
+RE.separatorDiv = document.getElementById('separatorDiv');
+
 window.onload = function() {
     RE.callback("ready");
 };
@@ -74,6 +77,7 @@ RE.editor.addEventListener("focus", function(e) {
                            RE.backuprange();
                            RE.enableEditingItems(e);
                            RE.callback("focus");
+                           RE.callback("enableBar");
                            });
 
 RE.editor.addEventListener("blur", function() {
@@ -298,24 +302,42 @@ RE.insertImage = function(url, alt,id) {
     
     var span = document.createElement("span");
     span.id = id;
+    span.className = "img_container"
     
     var progress = document.createElement("progress");
     progress.id = id + "_progress";
-    progress.value = 40;
+    progress.value = 0;
+    progress.className = "wp_media_indicator";
     
     var img = document.createElement('img');
     img.setAttribute("src", url);
     img.setAttribute("alt", alt);
-    img.id = id + "_img"
+    img.id = id + "_img";
+    img.style.opacity = 0.7;
     img.onload = RE.updateHeight;
     
-    span.appendChild(progress);
     span.appendChild(img);
+    span.appendChild(progress);
     
     RE.insertHTML(span.outerHTML);
     
 //    RE.insertHTML(img.outerHTML);
     RE.callback("input");
+};
+
+RE.updateImageProgress = function(prd,id) {
+    console.log(prd);
+    console.log(id);
+    var progressId = id + "_progress";
+    var progress = $("#" + progressId);
+    progress.value = parseFloat(prd);
+};
+
+RE.imageUploadSuccess = function(id) {
+    var progressId = id + "_progress";
+    $("#" + progressId).remove();
+    var image = document.getElementById(id + "_img");
+    image.style.opacity = 1;
 };
 
 RE.setBlockquote = function() {
@@ -700,28 +722,58 @@ RE.getCaretYPosition = function() {
 }
 
 RE.removeEditorState = function(type) {
-    for (var state = ['blockquote', 'h3', 'unorderedList'], n = [], i = 0, l = state.length; i < l; i++) {
-        if(state[i] != type) {
-            for (var loop = 0, len = RE.editorState.length; loop < len; loop++) {
-                if(state[i] == RE.editorState[loop]) {
-                    n.push(state[i]);
-                    switch(state[i]) {
-                        case 'blockquote':
-                            RE.setBlockquote();
-                            break;
-                        case 'h3':
-                            RE.setHeading('h3');
-                            break;
-                        case 'unorderedList':
-                            RE.setUnorderedList();
-                            break;
-                    }
-                }
-            }
-        }
+    const states = ['blockquote', 'h3', 'unorderedList']
+    let arithmetic = i => {
+        RE.editorState
+        .filter(item => item == i)
+        .forEach(item => {
+                 switch(item) {
+                 case 'blockquote':
+                 RE.setBlockquote();
+                 break;
+                 case 'h3':
+                 RE.setHeading('h3');
+                 break;
+                 case 'unorderedList':
+                 RE.setUnorderedList();
+                 break;
+                 }
+                 });
     }
+    states
+    .filter(i => i != type)
+    .forEach(i => {arithmetic(i)})
 }
 
 RE.displayTitle = function(display) {
-    
+   if (display) {
+      RE.titleEditor.style.display = '';
+      RE.separatorDiv.style.display = '';
+      RE.titleEditor.focus();
+   } else {
+      RE.titleEditor.style.display = 'none';
+      RE.separatorDiv.style.display = 'none';
+      RE.focus();
+   }
 }
+
+RE.titleEditor.addEventListener("keydown", function(e) {
+   if (e.keyCode == 13) {
+      e.stopPropagation();
+      e.preventDefault();
+      RE.focus();
+  }
+});
+
+RE.titleEditor.addEventListener("input", function(e) {
+  var show = e.target.innerHTML.replace(/^(<p>)(<br>)?<\/p>\s*$/ig, '');
+  if (show) {
+    e.target.setAttribute("placeholder", '');
+  } else {
+    e.target.setAttribute("placeholder", '请填写标题');
+  }
+});
+
+RE.titleEditor.addEventListener("focus", function(e) {
+  RE.callback("disableBar");
+});
